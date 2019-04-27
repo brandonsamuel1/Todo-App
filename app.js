@@ -3,13 +3,31 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const ejs = require('ejs');
 const mongoose = require('mongoose');
+const session = require('express-session');
+const passport = require('passport');
+const passportLocalMongoose = require('passport-local-mongoose');
 
 const app = express();
 
 app.use(express.static('public'));
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(session({
+    secret: process.env.SESSION_KEY,
+    resave: false,
+    saveUninitialized: true
+}));
 
+app.use(passport.initialize());
+app.use(passport.session());
+
+mongoose.connect('mongodb://localhost:27017/todoDB', {useNewUrlParser: true});
+
+const userSchema = new mongoose.Schema({
+    username: String,
+    email: String,
+    password: String
+});
 
 app.get('/', (req, res) => {
     res.send('Hello');
