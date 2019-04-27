@@ -12,7 +12,15 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 
 app.get('/', (req, res) => {
-    console.log('Home');
+    res.send('Hello');
+});
+
+app.get('/login', (req, res) => {
+    res.send('LOGIN');
+});
+
+app.get('/register', (req, res) => {
+    res.send('REGISTER');
 });
 
 app.listen(8080, (req, res) => {
