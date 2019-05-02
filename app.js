@@ -31,16 +31,16 @@ const todoSchema = new mongoose.Schema({
 
 todoSchema.plugin(passportLocalMongoose);
 
-const User = mongoose.model('Todo', todoSchema);
+const Todo = mongoose.model('Todo', todoSchema);
 
-passport.use(User.createStrategy());
+passport.use(Todo.createStrategy());
  
 passport.serializeUser(function(user, done) {
     done(null, user.id);
 });
   
 passport.deserializeUser(function(id, done) {
-    User.findById(id, function(err, user) {
+    Todo.findById(id, function(err, user) {
         done(err, user);
     });
 });
@@ -55,6 +55,41 @@ app.get('/login', (req, res) => {
 
 app.get('/register', (req, res) => {
     res.render('register');
+});
+
+app.get('/dashboard', (req, res) => {
+    res.send('DASHBOARD');
+});
+
+app.post('/register', (req, res) => {
+    Todo.register({username: req.body.username}, {email: req.body.email}, req.body.password, function(err, user) {
+        if(err) {
+            console.log(err)
+            res.redirect('/register');
+        } else {
+            passport.authenticate('local')(req, res, function() {
+                res.redirect('/dashboard');
+            });
+        };
+    });
+});
+
+app.post('/login', (req, res) => {
+    const user = new Todo({
+        username: req.body.username,
+        email: req.body.email,
+        password: req.body.password
+    });
+
+    req.login(user, (err) => {
+        if(err) {
+            console.log(err);
+        } else {
+            passport.authenticate('local')(req, res, function() {
+                res.redirect('/dashboard');
+            });
+        };
+    });
 });
 
 app.listen(8080, (req, res) => {
