@@ -29,16 +29,32 @@ const userSchema = new mongoose.Schema({
     password: String
 });
 
+userSchema.plugin(passportLocalMongoose);
+
+const User = mongoose.model('User', userSchema);
+
+passport.use(User.createStrategy());
+ 
+passport.serializeUser(function(user, done) {
+    done(null, user.id);
+});
+  
+passport.deserializeUser(function(id, done) {
+    User.findById(id, function(err, user) {
+        done(err, user);
+    });
+});
+
 app.get('/', (req, res) => {
     res.send('Hello');
 });
 
 app.get('/login', (req, res) => {
-    res.send('LOGIN');
+    res.render('login');
 });
 
 app.get('/register', (req, res) => {
-    res.send('REGISTER');
+    res.render('register');
 });
 
 app.listen(8080, (req, res) => {
