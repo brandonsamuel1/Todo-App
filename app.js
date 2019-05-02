@@ -15,13 +15,14 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(session({
     secret: process.env.SESSION_KEY,
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: false
 }));
 
 app.use(passport.initialize());
 app.use(passport.session());
 
 mongoose.connect('mongodb://localhost:27017/todoDB', {useNewUrlParser: true});
+mongoose.set('useCreateIndex', true);
 
 const todoSchema = new mongoose.Schema({
     username: String,
@@ -62,7 +63,7 @@ app.get('/dashboard', (req, res) => {
 });
 
 app.post('/register', (req, res) => {
-    Todo.register({username: req.body.username}, {email: req.body.email}, req.body.password, function(err, user) {
+    Todo.register({username: req.body.username, email: req.body.email}, req.body.password, function(err, user) {
         if(err) {
             console.log(err)
             res.redirect('/register');
