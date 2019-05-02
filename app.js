@@ -23,15 +23,15 @@ app.use(passport.session());
 
 mongoose.connect('mongodb://localhost:27017/todoDB', {useNewUrlParser: true});
 
-const userSchema = new mongoose.Schema({
+const todoSchema = new mongoose.Schema({
     username: String,
     email: String,
     password: String
 });
 
-userSchema.plugin(passportLocalMongoose);
+todoSchema.plugin(passportLocalMongoose);
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model('Todo', todoSchema);
 
 passport.use(User.createStrategy());
  
