@@ -47,7 +47,7 @@ passport.deserializeUser(function(id, done) {
 });
 
 app.get('/', (req, res) => {
-    res.send('Hello');
+    res.send('HOME PAGE');
 });
 
 app.get('/login', (req, res) => {
@@ -59,7 +59,7 @@ app.get('/register', (req, res) => {
 });
 
 app.get('/dashboard', (req, res) => {
-    res.send('DASHBOARD');
+    res.render('dashboard');
 });
 
 app.post('/register', (req, res) => {
@@ -91,6 +91,11 @@ app.post('/login', (req, res) => {
             });
         };
     });
+});
+
+app.get('/logout', (req, res) => {
+    req.logout();
+    res.redirect('/login');
 });
 
 app.listen(8080, (req, res) => {
