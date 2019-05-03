@@ -24,17 +24,31 @@ app.use(passport.session());
 mongoose.connect('mongodb://localhost:27017/todoDB', {useNewUrlParser: true});
 mongoose.set('useCreateIndex', true);
 
-const todoSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
     username: String,
     email: String,
-    password: String
+    password: String,
+    todos: [{ type: mongoose.Schema.Types.ObjectId, ref: 'List' }]
 });
 
-todoSchema.plugin(passportLocalMongoose);
+const listSchema = new mongoose.Schema({
+    author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    title: String,
+    description: String,
+    todos: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Todo' }]
+});
 
+const todoSchema = new mongoose.Schema({
+    todos: String
+});
+
+userSchema.plugin(passportLocalMongoose);
+
+const User = mongoose.model('User', userSchema);
+const List = mongoose.model('List', listSchema);
 const Todo = mongoose.model('Todo', todoSchema);
 
-passport.use(Todo.createStrategy());
+passport.use(User.createStrategy());
  
 passport.serializeUser(function(user, done) {
     done(null, user.id);
@@ -63,7 +77,7 @@ app.get('/dashboard', (req, res) => {
 });
 
 app.post('/register', (req, res) => {
-    Todo.register({username: req.body.username, email: req.body.email}, req.body.password, function(err, user) {
+    User.register({username: req.body.username, email: req.body.email}, req.body.password, function(err, user) {
         if(err) {
             console.log(err)
             res.redirect('/register');
@@ -96,6 +110,10 @@ app.post('/login', (req, res) => {
 app.get('/logout', (req, res) => {
     req.logout();
     res.redirect('/login');
+});
+
+app.get('/create', (req, res) => {
+    res.render('create');
 });
 
 app.listen(8080, (req, res) => {
