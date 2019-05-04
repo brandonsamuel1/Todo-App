@@ -28,18 +28,18 @@ const userSchema = new mongoose.Schema({
     username: String,
     email: String,
     password: String,
-    todos: [{ type: mongoose.Schema.Types.ObjectId, ref: 'List' }]
+    list: [{ type: mongoose.Schema.Types.ObjectId, ref: 'List' }]
 });
 
 const listSchema = new mongoose.Schema({
     author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     title: String,
     description: String,
-    list: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Todo' }]
+    todo: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Todo' }]
 });
 
 const todoSchema = new mongoose.Schema({
-    todos: String
+    todo: String
 });
 
 userSchema.plugin(passportLocalMongoose);
