@@ -35,7 +35,7 @@ const listSchema = new mongoose.Schema({
     author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     title: String,
     description: String,
-    todos: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Todo' }]
+    list: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Todo' }]
 });
 
 const todoSchema = new mongoose.Schema({
