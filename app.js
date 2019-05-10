@@ -55,7 +55,7 @@ passport.serializeUser(function(user, done) {
 });
   
 passport.deserializeUser(function(id, done) {
-    Todo.findById(id, function(err, user) {
+    User.findById(id, function(err, user) {
         done(err, user);
     });
 });
@@ -114,6 +114,28 @@ app.get('/logout', (req, res) => {
 
 app.get('/create', (req, res) => {
     res.render('create');
+    console.log(req.user.username);
+});
+
+app.post('/create', (req, res) => {
+    const list = new List({
+        title: req.body.title,
+        description: req.body.description
+    });
+
+    User.findById(req.user.id, function(err, foundUser) {
+        if(err) {
+            console.log(err);
+        } else {
+            if(foundUser) {
+                foundUser.list.push(list);
+                foundUser.save(function() {
+                    res.redirect('/dashboard');
+                });
+            };
+        };
+    });
+    console.log(list);
 });
 
 app.listen(8080, (req, res) => {
