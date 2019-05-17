@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const ejs = require('ejs');
 const mongoose = require('mongoose');
 const session = require('express-session');
+const cookieParser = require('cookie-parser')
 const passport = require('passport');
 const passportLocalMongoose = require('passport-local-mongoose');
 
@@ -11,10 +12,11 @@ const app = express();
 
 app.use(express.static('public'));
 app.set('view engine', 'ejs');
+app.use(cookieParser('keyboard cat'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(session({
-    secret: process.env.SESSION_KEY,
-    resave: false,
+    secret: 'keyboard cat',
+    resave: true,
     saveUninitialized: false
 }));
 
@@ -27,19 +29,31 @@ mongoose.set('useCreateIndex', true);
 const userSchema = new mongoose.Schema({
     username: String,
     email: String,
-    password: String,
-    list: [{ type: mongoose.Schema.Types.ObjectId, ref: 'List' }]
+    password: String
+    //list: [{ type: mongoose.Schema.Types.ObjectId, ref: 'List' }]
 });
 
 const listSchema = new mongoose.Schema({
-    author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    author: { 
+        id: {
+            type: mongoose.Schema.Types.ObjectId, 
+            ref: 'User'
+        }, 
+        username: String
+    },
     title: String,
     description: String,
     todo: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Todo' }]
 });
 
 const todoSchema = new mongoose.Schema({
-    todo: String
+    todo: String,
+    author: {
+        id: {
+            type: mongoose.Schema.Types.ObjectId, 
+            ref: 'User'
+        }
+    }
 });
 
 userSchema.plugin(passportLocalMongoose);
@@ -73,7 +87,16 @@ app.get('/register', (req, res) => {
 });
 
 app.get('/dashboard', (req, res) => {
-    res.render('dashboard');
+    List.find({}, function(err, foundList) {
+        if(err) {
+            console.log(err);
+        } else {
+            if(foundList) {
+                res.render('dashboard', {list: foundList});
+                //console.log(foundList[0].list[0]);
+            ;}
+        };
+    })
 });
 
 app.post('/register', (req, res) => {
@@ -118,24 +141,18 @@ app.get('/create', (req, res) => {
 });
 
 app.post('/create', (req, res) => {
-    const list = new List({
-        title: req.body.title,
-        description: req.body.description
-    });
+    let title = req.body.title;
+    let description = req.body.description;
+    let author = {id: req.user._id, username: req.user.username};
+    let newList = {title: title, description: description, author: author}
 
-    User.findById(req.user.id, function(err, foundUser) {
+    List.create(newList, function(err, newListCreated) {
         if(err) {
             console.log(err);
         } else {
-            if(foundUser) {
-                foundUser.list.push(list);
-                foundUser.save(function() {
-                    res.redirect('/dashboard');
-                });
-            };
-        };
-    });
-    console.log(list);
+            res.redirect('/dashboard');
+        }
+    })
 });
 
 app.listen(8080, (req, res) => {
