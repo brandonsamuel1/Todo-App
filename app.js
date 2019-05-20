@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
+const _ = require('lodash');
 const ejs = require('ejs');
 const mongoose = require('mongoose');
 const session = require('express-session');
@@ -149,6 +150,12 @@ app.post('/create', (req, res) => {
             res.redirect('/dashboard');
         }
     })
+});
+
+
+app.get('/:listTitle', (req, res) => {
+    const listTitle = _.capitalize(req.params.listTitle);
+    res.send(listTitle);
 });
 
 app.listen(8080, (req, res) => {

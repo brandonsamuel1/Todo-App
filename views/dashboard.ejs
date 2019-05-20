@@ -33,7 +33,7 @@
           <% for(let i = 0; i < list.length; i++) { %>
           <h2><%= list[i].title %></h2>
           <p><%= list[i].description %></p>
-          <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
+          <p><a class="btn btn-secondary" href="<%= list[i].title %>" role="button">View details &raquo;</a></p>
           <% } %>
         </div>
         <!-- <div class="col-md-4">
