@@ -30,16 +30,12 @@ const userSchema = new mongoose.Schema({
     username: String,
     email: String,
     password: String
-    //list: [{ type: mongoose.Schema.Types.ObjectId, ref: 'List' }]
 });
 
 const listSchema = new mongoose.Schema({
-    author: { 
-        id: {
+    author: {
             type: mongoose.Schema.Types.ObjectId, 
             ref: 'User'
-        }, 
-        username: String
     },
     title: String,
     description: String,
@@ -87,7 +83,7 @@ app.get('/register', (req, res) => {
 });
 
 app.get('/dashboard', (req, res) => {
-    List.find({}, function(err, foundList) {
+    List.find({author: req.user._id}, function(err, foundList) {
         if(err) {
             console.log(err);
         } else {
@@ -113,7 +109,7 @@ app.post('/register', (req, res) => {
 });
 
 app.post('/login', (req, res) => {
-    const user = new Todo({
+    const user = new User({
         username: req.body.username,
         email: req.body.email,
         password: req.body.password
@@ -143,7 +139,7 @@ app.get('/create', (req, res) => {
 app.post('/create', (req, res) => {
     let title = req.body.title;
     let description = req.body.description;
-    let author = {id: req.user._id, username: req.user.username};
+    let author = req.user._id;
     let newList = {title: title, description: description, author: author}
 
     List.create(newList, function(err, newListCreated) {
