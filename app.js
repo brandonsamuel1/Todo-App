@@ -72,7 +72,7 @@ passport.deserializeUser(function(id, done) {
 });
 
 app.get('/', (req, res) => {
-    res.send('HOME PAGE');
+    res.redirect('/login');
 });
 
 app.get('/login', (req, res) => {
@@ -83,18 +83,6 @@ app.get('/register', (req, res) => {
     res.render('register');
 });
 
-app.get('/dashboard', (req, res) => {
-    List.find({author: req.user._id}, function(err, foundList) {
-        if(err) {
-            console.log(err);
-        } else {
-            if(foundList) {
-                res.render('dashboard', {list: foundList});
-                //console.log(foundList[0].list[0]);
-            ;}
-        };
-    })
-});
 
 app.post('/register', (req, res) => {
     User.register({username: req.body.username, email: req.body.email}, req.body.password, function(err, user) {
@@ -130,6 +118,19 @@ app.post('/login', (req, res) => {
 app.get('/logout', (req, res) => {
     req.logout();
     res.redirect('/login');
+});
+
+
+app.get('/dashboard', (req, res) => {
+    List.find({author: req.user._id}, function(err, foundList) {
+        if(err) {
+            console.log(err);
+        } else {
+            if(foundList) {
+                res.render('dashboard', {list: foundList});
+            ;}
+        };
+    })
 });
 
 app.get('/create', (req, res) => {
