@@ -157,7 +157,7 @@ app.post('/create', (req, res) => {
 
 app.get('/lists/:id', (req, res) => {
     const id = req.params._id;
-    res.send(id);
+    res.render('list')
 });
 
 

@@ -1,0 +1,50 @@
+<%- include('partials/header') %>
+
+
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+<a class="navbar-brand" href="#">Todo App</a>
+<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+</button>
+
+<div class="collapse navbar-collapse" id="navbarsExampleDefault">
+    <ul class="navbar-nav mr-auto">
+    <li class="nav-item">
+        <a class="nav-link" href="/logout">Logout</a>
+    </li>
+    </ul>
+</div>
+</nav>
+
+<div style="margin-top: 10%;" class="container">
+    <h1>Todos:</h1>
+    <hr>
+    <div class="row">
+        <div class="col-sm-8">
+            <div class="card">
+                <div class="card-header">
+                    <input class="form-control" type="text" placeholder="Enter a todo">
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            Test
+                            <span><i style="float: right;" class="fas fa-trash-alt"></i></span>
+                        </li>
+                        <li class="list-group-item">
+                            Test
+                            <i style="float: right;" class="fas fa-trash-alt"></i></span>
+                        </li>
+                        <li class="list-group-item">
+                            Test
+                            <i style="float: right;" class="fas fa-trash-alt"></i></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<%- include('partials/footer') %>
