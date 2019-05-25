@@ -30,8 +30,8 @@
           <% for(let i = 0; i < list.length; i++) { %>
           <h2><%= list[i].title %></h2>
           <p><%= list[i].description %></p>
-          <p><a class="btn btn-secondary" href="<%= list[i].title %>" role="button">View details &raquo;</a></p>
-          <form method="POST" action="<%= list[i].title %>?_method=DELETE">
+          <p><a class="btn btn-secondary" href="lists/<%= list[i]._id %>" role="button">View details &raquo;</a></p>
+          <form method="POST" action="lists/<%= list[i]._id %>?_method=DELETE">
             <button class="btn btn-danger" type="submit" name="_method">Delete List &raquo;</button>
           </form>
           <br>

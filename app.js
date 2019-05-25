@@ -155,15 +155,15 @@ app.post('/create', (req, res) => {
 });
 
 
-app.get('/:listTitle', (req, res) => {
-    const listTitle = _.capitalize(req.params.listTitle);
-    res.send(listTitle);
+app.get('/lists/:id', (req, res) => {
+    const id = req.params._id;
+    res.send(id);
 });
 
 
-app.delete('/:listTitle', (req, res) => {
-    const title = req.params.listTitle;
-    List.deleteOne({title: title}, function(err) {
+app.delete('/lists/:id', (req, res) => {
+    const id = req.params._id;
+    List.findOneAndDelete({id: id}, function(err) {
         if(err) {
             console.log(err);
         } else {
