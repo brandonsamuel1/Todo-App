@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
+const methodOverride = require('method-override');
 const _ = require('lodash');
 const ejs = require('ejs');
 const mongoose = require('mongoose');
@@ -15,6 +16,7 @@ app.use(express.static('public'));
 app.set('view engine', 'ejs');
 app.use(cookieParser('keyboard cat'));
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(methodOverride('_method'));
 app.use(session({
     secret: 'keyboard cat',
     resave: true,
@@ -135,7 +137,6 @@ app.get('/dashboard', (req, res) => {
 
 app.get('/create', (req, res) => {
     res.render('create');
-    console.log(req.user.username);
 });
 
 app.post('/create', (req, res) => {
@@ -157,6 +158,18 @@ app.post('/create', (req, res) => {
 app.get('/:listTitle', (req, res) => {
     const listTitle = _.capitalize(req.params.listTitle);
     res.send(listTitle);
+});
+
+
+app.delete('/:listTitle', (req, res) => {
+    const title = req.params.listTitle;
+    List.deleteOne({title: title}, function(err) {
+        if(err) {
+            console.log(err);
+        } else {
+            res.redirect('/dashboard');
+        };
+    });
 });
 
 app.listen(8080, (req, res) => {
