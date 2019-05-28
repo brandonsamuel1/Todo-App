@@ -23,22 +23,19 @@
         <div class="col-sm-8">
             <div class="card">
                 <div class="card-header">
-                    <input class="form-control" type="text" placeholder="Enter a todo">
+                    <form action="/lists" method="POST">
+                        <input class="form-control" type="text" placeholder="Enter a todo" name="todoItem">
+                        <input type="submit" value="Submit">
+                    </form>
                 </div>
                 <div class="card-body">
                     <ul class="list-group list-group-flush">
+                        <% for(let i = 0; i < todo.length; i++) { %>
                         <li class="list-group-item">
-                            Test
-                            <span><i style="float: right;" class="fas fa-trash-alt"></i></span>
-                        </li>
-                        <li class="list-group-item">
-                            Test
+                            <%= todo[i].todo %>
                             <i style="float: right;" class="fas fa-trash-alt"></i></span>
                         </li>
-                        <li class="list-group-item">
-                            Test
-                            <i style="float: right;" class="fas fa-trash-alt"></i></span>
-                        </li>
+                        <% } %>
                     </ul>
                 </div>
             </div>

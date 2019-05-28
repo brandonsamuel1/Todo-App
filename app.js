@@ -50,7 +50,7 @@ const todoSchema = new mongoose.Schema({
     author: {
         id: {
             type: mongoose.Schema.Types.ObjectId, 
-            ref: 'User'
+            ref: 'List'
         }
     }
 });
@@ -157,7 +157,40 @@ app.post('/create', (req, res) => {
 
 app.get('/lists/:id', (req, res) => {
     const id = req.params._id;
-    res.render('list')
+    Todo.find({author: req.user._id}, function(err, foundTodo) {
+        if(err) {
+            console.log(err);
+        } else {
+            if(foundTodo) {
+                res.render('list', {todo: foundTodo, id: id});
+            };
+        };
+    });
+});
+
+
+app.post('/lists', (req, res) => {
+    let todoItem = req.body.todoItem;
+    // let author = List._id;
+    let newTodo = {todo: todoItem};
+
+    List.findOne({id: req.params._id}, function(err, list) {
+        if(err) {
+            console.log(err);
+        } else {
+            Todo.create(newTodo, function(err, todo) {
+                if(err) {
+                    console.log(err);
+                } else {
+                    todo.author.id = list._id;
+                    todo.save();
+                    list.todo.push(todo._id);
+                    list.save();
+                    res.redirect('/lists/' + list._id)
+                };
+            });
+        };
+    });
 });
 
 

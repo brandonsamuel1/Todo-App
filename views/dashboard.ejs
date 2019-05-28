@@ -32,7 +32,7 @@
           <p><%= list[i].description %></p>
           <p><a class="btn btn-secondary" href="lists/<%= list[i]._id %>" role="button">View details &raquo;</a></p>
           <form method="POST" action="lists/<%= list[i].title %>?_method=DELETE">
-            <button class="btn btn-danger" type="submit" name="_method">Delete List &raquo;</button>
+            <button class="btn btn-danger" type="submit" name="_method">Delete List <span><i class="fas fa-trash-alt"></i></span></button>
           </form>
           <br>
           <% } %>
